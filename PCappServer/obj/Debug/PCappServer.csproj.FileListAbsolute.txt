@@ -1,0 +1,11 @@
+C:\Users\sheik\source\repos\PCappServer\PCAppClientHandlerServer\PCappServer\obj\Debug\PCappServer.csproj.AssemblyReference.cache
+C:\Users\sheik\source\repos\PCappServer\PCAppClientHandlerServer\PCappServer\obj\Debug\PCappServer.csproj.SuggestedBindingRedirects.cache
+C:\Users\sheik\source\repos\PCappServer\PCAppClientHandlerServer\PCappServer\obj\Debug\PCappServer.Form1.resources
+C:\Users\sheik\source\repos\PCappServer\PCAppClientHandlerServer\PCappServer\obj\Debug\PCappServer.Properties.Resources.resources
+C:\Users\sheik\source\repos\PCappServer\PCAppClientHandlerServer\PCappServer\obj\Debug\PCappServer.csproj.GenerateResource.cache
+C:\Users\sheik\source\repos\PCappServer\PCAppClientHandlerServer\PCappServer\obj\Debug\PCappServer.csproj.CoreCompileInputs.cache
+C:\Users\sheik\source\repos\PCappServer\PCAppClientHandlerServer\PCappServer\bin\Debug\PCappServer.exe.config
+C:\Users\sheik\source\repos\PCappServer\PCAppClientHandlerServer\PCappServer\bin\Debug\PCappServer.exe
+C:\Users\sheik\source\repos\PCappServer\PCAppClientHandlerServer\PCappServer\bin\Debug\PCappServer.pdb
+C:\Users\sheik\source\repos\PCappServer\PCAppClientHandlerServer\PCappServer\obj\Debug\PCappServer.exe
+C:\Users\sheik\source\repos\PCappServer\PCAppClientHandlerServer\PCappServer\obj\Debug\PCappServer.pdb

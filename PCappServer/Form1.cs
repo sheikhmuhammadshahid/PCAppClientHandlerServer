@@ -12,7 +12,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-
 namespace PCappServer
 {
     public partial class Form1 : Form
@@ -32,14 +31,16 @@ namespace PCappServer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            CheckForIllegalCrossThreadCalls = true;
+            getIP();
+            new Thread(Start).Start();
         }
 
 
         public void Start()
         {
             listenerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            listenerSocket.Bind(new IPEndPoint(IPAddress.Any, 8888));
+            listenerSocket.Bind(new IPEndPoint(IPAddress.Any, 1234));
             listenerSocket.Listen(10);
 
             Console.WriteLine("Server started...");
@@ -167,6 +168,33 @@ namespace PCappServer
             }
         }
 
+        private void getIP() {
+            try
+            {
+                string hostName = Dns.GetHostName();
+                IPHostEntry hostEntry = Dns.GetHostEntry(hostName);
 
+                foreach (IPAddress ipAddress in hostEntry.AddressList)
+                {
+                    if (ipAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                    {
+                        Console.WriteLine($"IPv4 Address: {ipAddress}");
+                        lblIpAddress.Text = ipAddress.ToString();
+                    }
+                    else if (ipAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
+                    {
+                        Console.WriteLine($"IPv6 Address: {ipAddress}");
+                    }
+                }
+
+                Console.ReadLine();
+
+            }
+            catch (Exception ex)
+            {
+
+                
+            }
+        }
     }
 }
