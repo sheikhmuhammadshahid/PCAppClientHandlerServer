@@ -19,7 +19,8 @@ namespace PCappServer
         string pressedBy = "-1";
         string roundType="-1";
         string questionNo = "-1";
-
+        List<string> teamsName=new List<string>();
+        string onGoingEvent = "-1";
 
         private Socket listenerSocket;
         private List<User> clientSockets = new List<User>();
@@ -31,7 +32,7 @@ namespace PCappServer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            CheckForIllegalCrossThreadCalls = true;
+            CheckForIllegalCrossThreadCalls = false;
             getIP();
             new Thread(Start).Start();
         }
@@ -84,6 +85,12 @@ namespace PCappServer
                 {
                     try
                     {
+                        txtbxconnectedClients.Text += "\n"+name;
+                        if (clientSockets.Any(s => s.Name.ToLower() == name.ToLower()) && (name.ToLower() == "admin" || name.ToLower() == "admin1"))
+                        {
+                            clientSockets.Remove(clientSockets.Where(s=>s.Name.ToLower()==name.ToLower()).FirstOrDefault());
+                        }
+                        clientSockets.Add(new User(name,clientSocket));
                         BroadcastMessageToAll("connected:" + name);
                         while (true)
                         {
@@ -102,14 +109,25 @@ namespace PCappServer
                             }
 
                             string message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                            if (message.StartsWith("eventId:"))
+                            {
+                                onGoingEvent = message.Split(':')[1];
+                            }
+                           else if (message.StartsWith("round:"))
+                            {
+                                roundType = message.Split(':')[1];
+                            }
+                            
                             Console.WriteLine("Received: " + message);
+                            txtbxMessage.Text += "\n" + message;
 
-                            BroadcastMessageToAll(message);
+                            new Thread(()=>BroadcastMessageToAll(message)).Start();
                         }
                     }
                     catch (Exception ex)
                     {
-                        BroadcastMessageToAll("disconnected:" + name);
+                       
+                        new Thread(() => BroadcastMessageToAll("disconnected:" + name)).Start();
                         Console.WriteLine("Error: " + ex.Message);
                         clientSockets.Remove(clientSockets.Where(s => s.Socket == clientSocket).SingleOrDefault());
                         clientSocket.Close();
@@ -195,6 +213,11 @@ namespace PCappServer
 
                 
             }
+        }
+
+        private void richTextBox2_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -12,6 +12,10 @@ namespace PCappServer.classes
         public string Name { get; set; } 
         public Socket Socket { get; set; }
 
-
+       public User(string name, Socket socket)
+        {
+            Name = name;
+            Socket = socket;
+        }
     }
 }
