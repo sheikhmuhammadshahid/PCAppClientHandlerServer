@@ -12,6 +12,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Xml.Linq;
+
 namespace PCappServer
 {
     public partial class Form1 : Form
@@ -76,16 +78,17 @@ namespace PCappServer
 
         private void HandleClient(Socket clientSocket)
         {
+            string name="";
             try
             {
                 byte[] buffer = new byte[1024];
                 int bytesRead = clientSocket.Receive(buffer);
-                string name = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                 name = Encoding.ASCII.GetString(buffer, 0, bytesRead);
                 if (!clientSockets.Any(s => s.Name.ToLower() == name.ToLower()) || name.ToLower() == "admin" || name.ToLower() == "admin1")
                 {
                     try
                     {
-                        txtbxconnectedClients.Text += "\n"+name;
+                        txtbxconnectedClients.Text += "\nconnected:" + name;
                         if (clientSockets.Any(s => s.Name.ToLower() == name.ToLower()) && (name.ToLower() == "admin" || name.ToLower() == "admin1"))
                         {
                             clientSockets.Remove(clientSockets.Where(s=>s.Name.ToLower()==name.ToLower()).FirstOrDefault());
@@ -99,7 +102,7 @@ namespace PCappServer
 
                             if (bytesRead == 0)
                             {
-                                Console.WriteLine("Client disconnected: " + name);
+                                txtbxconnectedClients.Text += "\ndisconnected:" + name;
                                 BroadcastMessageToAll("disconnected:" + name);
 
                                 clientSockets.Remove(clientSockets.Where(s => s.Socket == clientSocket).SingleOrDefault());
@@ -126,7 +129,7 @@ namespace PCappServer
                     }
                     catch (Exception ex)
                     {
-                       
+                        txtbxconnectedClients.Text+=("disconnected:" + name);
                         new Thread(() => BroadcastMessageToAll("disconnected:" + name)).Start();
                         Console.WriteLine("Error: " + ex.Message);
                         clientSockets.Remove(clientSockets.Where(s => s.Socket == clientSocket).SingleOrDefault());
@@ -134,7 +137,7 @@ namespace PCappServer
                     }
                 }
                 else {
-                    sendMessage("Already exists"+name,clientSocket);
+                    sendMessage("Already exists "+name,clientSocket);
                     clientSocket.Close();
                 }
 
@@ -142,7 +145,11 @@ namespace PCappServer
             }
             catch (Exception ex)
             {
-               
+                txtbxconnectedClients.Text += ("disconnected:" + name);
+                new Thread(() => BroadcastMessageToAll("disconnected:" + name)).Start();
+                Console.WriteLine("Error: " + ex.Message);
+                clientSockets.Remove(clientSockets.Where(s => s.Socket == clientSocket).SingleOrDefault());
+                clientSocket.Close();
             }
         }
         private void sendMessage(string message, Socket tosend) {
