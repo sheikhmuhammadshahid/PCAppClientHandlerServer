@@ -182,15 +182,19 @@ namespace PCappServer
         {
             byte[] buffer = Encoding.ASCII.GetBytes(message);
 
-            foreach (User clientSocket in clientSockets)
+            try
             {
-                try
+                foreach (User clientSocket in clientSockets)
                 {
-                    clientSocket.Socket.Send(buffer);
+                    try
+                    {
+                        clientSocket.Socket.Send(buffer);
+                    }
+                    catch (Exception ex) { }
+
                 }
-                catch (Exception ex) { }
-                
             }
+            catch (Exception ex) { }
         }
 
         private void getIP() {

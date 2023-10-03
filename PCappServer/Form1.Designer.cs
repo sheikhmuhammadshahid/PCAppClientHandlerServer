@@ -51,6 +51,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtbxMessage.Location = new System.Drawing.Point(523, 152);
             this.txtbxMessage.Name = "txtbxMessage";
+            this.txtbxMessage.ReadOnly = true;
             this.txtbxMessage.Size = new System.Drawing.Size(495, 422);
             this.txtbxMessage.TabIndex = 2;
             this.txtbxMessage.Text = "";
@@ -61,6 +62,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.txtbxconnectedClients.Location = new System.Drawing.Point(12, 152);
             this.txtbxconnectedClients.Name = "txtbxconnectedClients";
+            this.txtbxconnectedClients.ReadOnly = true;
             this.txtbxconnectedClients.Size = new System.Drawing.Size(473, 426);
             this.txtbxconnectedClients.TabIndex = 3;
             this.txtbxconnectedClients.Text = "";
