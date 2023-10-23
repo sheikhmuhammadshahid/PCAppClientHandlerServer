@@ -9,3 +9,6 @@ C:\Users\sheik\source\repos\PCappServer\PCAppClientHandlerServer\PCappServer\bin
 C:\Users\sheik\source\repos\PCappServer\PCAppClientHandlerServer\PCappServer\bin\Debug\PCappServer.pdb
 C:\Users\sheik\source\repos\PCappServer\PCAppClientHandlerServer\PCappServer\obj\Debug\PCappServer.exe
 C:\Users\sheik\source\repos\PCappServer\PCAppClientHandlerServer\PCappServer\obj\Debug\PCappServer.pdb
+C:\Users\sheik\source\repos\PCappServer\PCAppClientHandlerServer\PCappServer\bin\Debug\Newtonsoft.Json.dll
+C:\Users\sheik\source\repos\PCappServer\PCAppClientHandlerServer\PCappServer\bin\Debug\Newtonsoft.Json.xml
+C:\Users\sheik\source\repos\PCappServer\PCAppClientHandlerServer\PCappServer\obj\Debug\PCappServer.csproj.CopyComplete
