@@ -161,15 +161,17 @@ namespace PCappServer
                                     txtbxMessage.Text += "\n" + myMessage.value;
                                     sendMessage(clientSocket, 1, myMessage);
 
+                                  //  sendMessage(clientSocket,2,myMessage);
+
                                 }
-                                if (clientSockets.Count != 0)
-                                {
+                                
+                                
                                     myMessage.todo = "Teamsconnected";
                                     myMessage.value = string.Join(",", clientSockets.Select(s => s.Name).ToArray());
 
                                     txtbxMessage.Text += "\n" + myMessage.value;
                                     sendMessage(clientSocket, 1, myMessage);
-                                }
+                                
 
                             }).Start();
                             /*if (name == "admin1")
@@ -199,9 +201,12 @@ namespace PCappServer
 
                                 string message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
                                 int checkStatus = isMyMessage(message);
-                               
 
-                                if (checkStatus == 1)
+                                if (checkStatus == 2)
+                                {
+                                    pressedBy = "-1";
+                                }
+                                else if (checkStatus == 1)
                                 {
                                     myMessage  = JsonConvert.DeserializeObject<MyMessage>(message);
                                     if (myMessage.todo == "buzzer")
