@@ -23,14 +23,14 @@ namespace PCappServer
     public partial class Form1 : Form
     {
         string pressedBy = "-1";
-        string roundType="-1";
+        string roundType = "-1";
         string questionNo = "-1";
-        List<string> teamsName=new List<string>();
+        List<string> teamsName = new List<string>();
         string onGoingEvent = "-1";
 
 
-       /* MyMessage myMessage = new MyMessage();*/
-        OnGoingEvent onGoingEvents=new OnGoingEvent();
+        /* MyMessage myMessage = new MyMessage();*/
+        OnGoingEvent onGoingEvents = new OnGoingEvent();
         private Socket listenerSocket;
         private List<User> clientSockets = new List<User>();
 
@@ -49,7 +49,7 @@ namespace PCappServer
 
         public void Start()
         {
-          
+
             listenerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listenerSocket.Bind(new IPEndPoint(getIP(), 1234));
             listenerSocket.Listen(10);
@@ -66,6 +66,7 @@ namespace PCappServer
 
             foreach (User clientSocket in clientSockets)
             {
+
                 clientSocket.Socket.Close();
             }
         }
@@ -77,9 +78,7 @@ namespace PCappServer
                 while (true)
                 {
                     Socket clientSocket = listenerSocket.Accept();
-                    Console.WriteLine("Client connected: " + clientSocket.RemoteEndPoint);
-
-
+                /*    Console.WriteLine("Client connected: " + clientSocket.RemoteEndPoint);*/
 
                     Thread clientThread = new Thread(() => HandleClient(clientSocket));
                     clientThread.Start();
@@ -97,7 +96,7 @@ namespace PCappServer
                 /*myMessage*//* = v;*/
                 return 1;
             }
-            var vs=JsonConvert.DeserializeObject<OnGoingEvent>(name);
+            var vs = JsonConvert.DeserializeObject<OnGoingEvent>(name);
             if (vs.round != null && vs.eventId != 0)
             {
                 onGoingEvents = vs;
@@ -106,31 +105,31 @@ namespace PCappServer
 
             return 0;
         }
-        
+
 
         private void HandleClient(Socket clientSocket)
         {
             MyMessage myMessage = new MyMessage();
-            string name="";
+            string name = "";
             try
             {
                 byte[] buffer = new byte[1024];
                 int bytesRead = clientSocket.Receive(buffer);
                 name = Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
-                 myMessage = JsonConvert.DeserializeObject<MyMessage>(name);
+                myMessage = JsonConvert.DeserializeObject<MyMessage>(name);
                 name = myMessage.value;
                 if (onGoingEvents.eventId == 0 && name.ToLower() != "admin")
                 {
                     myMessage.todo = "issue";
                     myMessage.value = name + " event is not started yet. ";
-                    sendMessage(clientSocket, 1,myMessage);
+                    sendMessage(clientSocket, 1, myMessage);
                     clientSocket.Close();
                 }
-                else if (!teamsName.Any(s => s.ToLower() == name.ToLower()) && name.ToLower() != "admin" &&name.ToLower() != "admin1")
+                else if (!teamsName.Any(s => s.ToLower() == name.ToLower()) && name.ToLower() != "admin" && name.ToLower() != "admin1")
                 {
                     myMessage.todo = "issue";
-                    myMessage.value = name+ " is not enrolled in this event.";
+                    myMessage.value = name + " is not enrolled in this event.";
                     sendMessage(clientSocket, 1, myMessage);
                     clientSocket.Close();
                 }
@@ -148,30 +147,30 @@ namespace PCappServer
                                 user.Socket.Close();
                                 clientSockets.Remove(user);
                             }
-                           
+
                             clientSockets.Add(new User(name, clientSocket));
 
                             new Thread(() => { BroadcastMessageToAll(1, myMessage);
-                               
+
                                 if (name != "admin")
                                 {
-                                  
+
                                     myMessage.todo = "eventId";
                                     myMessage.value = onGoingEvents.eventId.ToString();
                                     txtbxMessage.Text += "\n" + myMessage.value;
                                     sendMessage(clientSocket, 1, myMessage);
 
-                                  //  sendMessage(clientSocket,2,myMessage);
+                                    //  sendMessage(clientSocket,2,myMessage);
 
                                 }
-                                
-                                
-                                    myMessage.todo = "Teamsconnected";
-                                    myMessage.value = string.Join(",", clientSockets.Select(s => s.Name).ToArray());
 
-                                    txtbxMessage.Text += "\n" + myMessage.value;
-                                    sendMessage(clientSocket, 1, myMessage);
-                                
+
+                                myMessage.todo = "Teamsconnected";
+                                myMessage.value = string.Join(",", clientSockets.Select(s => s.Name).ToArray());
+
+                                txtbxMessage.Text += "\n" + myMessage.value;
+                                sendMessage(clientSocket, 1, myMessage);
+
 
                             }).Start();
                             /*if (name == "admin1")
@@ -208,7 +207,7 @@ namespace PCappServer
                                 }
                                 else if (checkStatus == 1)
                                 {
-                                    myMessage  = JsonConvert.DeserializeObject<MyMessage>(message);
+                                    myMessage = JsonConvert.DeserializeObject<MyMessage>(message);
                                     if (myMessage.todo == "buzzer")
                                     {
                                         lock (pressedBy)
@@ -227,6 +226,28 @@ namespace PCappServer
                                     {
                                         onGoingEvents.eventId = int.Parse(myMessage.value);
                                     }
+                                    else if (myMessage.todo == "clear")
+                                    {
+                                        pressedBy = "-1";
+                                        roundType = "-1";
+                                        questionNo = "-1";
+                                        teamsName = new List<string>();
+                                        onGoingEvent = "-1";
+
+
+                                        /* MyMessage myMessage = new MyMessage();*/
+                                         onGoingEvents = new OnGoingEvent();
+
+                                        foreach (var item in clientSockets)
+                                        {
+                                            try
+                                            {
+                                                item.Socket.Close();
+                                            }
+                                            catch (Exception e) { }
+                                        }
+                                        clientSockets = new List<User>();
+                                    } 
                                     else if (myMessage.todo == "teams")
                                     {
                                         teamsName = myMessage.value.Split(',').ToList();
@@ -236,7 +257,6 @@ namespace PCappServer
                                         roundType = myMessage.value;
                                     }
                                 }
-
                                 if (myMessage.todo != "buzzer")
                                 {
                                     Console.WriteLine("Received: " + message);
@@ -245,7 +265,7 @@ namespace PCappServer
                                 }
                               
                             }
-                        }
+                        } 
                         catch (Exception ex)
                         {
                             txtbxconnectedClients.Text += ("\ndisconnected:" + name);
@@ -282,12 +302,7 @@ namespace PCappServer
                 clientSocket.Close();
             }
         }
-        private void handleMessage() {
-            try {
-                
-            } catch (Exception ex) {
-                return ;
-            } }
+     
         private void sendMessage( Socket tosend,int isMessage,MyMessage myMessage) {
             try
             {
