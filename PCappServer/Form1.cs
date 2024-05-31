@@ -45,8 +45,6 @@ namespace PCappServer
             getIP();
             new Thread(Start).Start();
         }
-
-
         public void Start()
         {
 
